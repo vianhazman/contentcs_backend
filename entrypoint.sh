@@ -1,0 +1,11 @@
+#!/bin/sh
+echo "Migrating DBs."
+python manage.py makemigrations
+python manage.py migrate
+
+echo "collectstatic."
+python manage.py collectstatic --noinput
+
+echo "Starting Gunicorn."
+exec gunicorn contentcs_service.wsgi \
+    --bind 0.0.0.0:8000
