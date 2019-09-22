@@ -1,7 +1,7 @@
-#content.cs-service
+# content.cs-service
 This repository is the backend service for content.cs.ui.ac.id.
 
-##How to run
+## How to run
 
 Initialize database information in `.env` with structure as below.
 ```
@@ -18,7 +18,7 @@ run the service in background using
 
 build the image using ```docker-compose build```
 
-##How to inspect runtime
+## How to inspect runtime
 
 see the nginx logs
 ```docker-compose logs nginx```
