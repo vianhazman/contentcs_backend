@@ -3,7 +3,7 @@ echo "Migrating DBs."
 python manage.py makemigrations
 python manage.py migrate
 
-echo "collectstatic."
+echo "running collectstatic."
 python manage.py collectstatic --noinput
 
 echo "Starting Gunicorn."
