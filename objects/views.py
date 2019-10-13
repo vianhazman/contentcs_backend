@@ -2,9 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from rest_framework import status
-
-from objects.serializers import CourseSerializer, SectionSerializer
-from .models import Course, Section
+import os
+import imageio
+from django.conf import settings
+from objects.serializers import CourseSerializer, SectionSerializer, VideoSerializer
+from objects.models import Course, Section, Video
+from objects.util.metadataFetch import MetadataFetch
 
 
 class ListCourse(APIView):
@@ -173,5 +176,35 @@ class get_delete_update_course(APIView):
         #         'status': 'UNAUTHORIZED'
         #     }
         #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
+
+class ListVideo(APIView):
+    """
+    View to list all video in the system.
+
+    * Requires token authentication.
+    * Only admin users are able to access this view.
+    """
+    # authentication_classes = [authentication.TokenAuthentication]
+    # permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request, format=None):
+        """
+        Return a list of all users.
+        """
+        section_id = self.request.query_params.get('sectionId')
+        queryset = Video.objects.filter(course_object__id = section_id) \
+            if section_id else Video.objects.all()
+        serializer_class = VideoSerializer(queryset, many=True)
+        return Response({"videos": serializer_class.data})
+
+    def post(self, request):
+        serializer = VideoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            id = serializer.data['id']
+            video_obj = MetadataFetch.getVideoDuration(id)
+            serializer = VideoSerializer(video_obj)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

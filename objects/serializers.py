@@ -17,3 +17,12 @@ class SectionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Section.objects.create(**validated_data)
+
+
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = '__all__'
+
+    def create(self, validated_data):
+        return Video.objects.create(**validated_data)

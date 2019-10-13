@@ -5,4 +5,5 @@ COPY requirements.txt /usr/src/app/requirements.txt
 EXPOSE 8000
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+
 ENTRYPOINT ["bash","entrypoint.sh"]

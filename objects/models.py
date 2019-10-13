@@ -21,7 +21,7 @@ class Section(models.Model):
 class Video(models.Model):
     id = models.AutoField(primary_key=True)
     video_title = models.CharField(max_length=30)
-    video_duration_in_minutes = models.IntegerField(default=0)
+    video_duration_in_seconds = models.IntegerField(default=0)
     video_description = models.TextField(default='')
     video_file = models.FileField(upload_to='videos/', null=True, verbose_name="")
     section_object = models.ForeignKey(Section, on_delete=models.CASCADE)

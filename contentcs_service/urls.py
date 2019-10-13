@@ -2,6 +2,8 @@ from django.conf.urls import url, re_path, include
 from django.contrib.auth.models import User
 from django.contrib import admin
 from rest_framework import routers, serializers, viewsets
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 # Serializers define the API representation.
@@ -27,3 +29,4 @@ urlpatterns = [
     re_path('api/', include('objects.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
