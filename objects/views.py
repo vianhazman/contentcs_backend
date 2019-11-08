@@ -1,3 +1,5 @@
+from django.http import HttpResponse
+from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
@@ -8,6 +10,10 @@ from django.conf import settings
 from objects.serializers import CourseSerializer, SectionSerializer, VideoSerializer
 from objects.models import Course, Section, Video
 from objects.util.metadataFetch import MetadataFetch
+from userauth.permissions import IsDosen, IsMahasiswa
+from rest_framework.permissions import IsAdminUser
+from django.core.exceptions import PermissionDenied
+
 
 
 class ListCourse(APIView):
@@ -17,8 +23,7 @@ class ListCourse(APIView):
     * Requires token authentication.
     * Only admin users are able to access this view.
     """
-    # authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsMahasiswa | IsDosen | IsAdminUser]
 
     def get(self, request, format=None):
         """
@@ -28,8 +33,14 @@ class ListCourse(APIView):
         serializer_class = CourseSerializer(queryset, many=True)
         return Response({"courses": serializer_class.data})
 
+    # def get(request, sso_profile):
+    #     return HttpResponse(json.dumps(sso_profile))
+
     def post(self, request):
-        serializer = CourseSerializer(data=request.data)
+
+        data = request.data
+        data['created_by'] = request.user.id
+        serializer = CourseSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -42,8 +53,7 @@ class ListSection(APIView):
     * Requires token authentication.
     * Only admin users are able to access this view.
     """
-    # authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsMahasiswa | IsDosen | IsAdminUser]
 
     def get(self, request, format=None):
         """
@@ -56,7 +66,9 @@ class ListSection(APIView):
         return Response({"sections": serializer_class.data})
 
     def post(self, request):
-        serializer = SectionSerializer(data=request.data)
+        data = request.data
+        data['created_by'] = request.user.id
+        serializer = SectionSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -65,11 +77,18 @@ class ListSection(APIView):
 
 class get_delete_update_section(APIView):
     serializer_class = SectionSerializer
-    # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
+
+    permission_classes = [IsMahasiswa | IsDosen | IsAdminUser]
+
 
     def get_queryset(self, pk):
         try:
             section = Section.objects.get(id=pk)
+            if len(section) == 0:
+                content = {
+                    'status': 'Not Found'
+                }
+                return Response(content, status=status.HTTP_404_NOT_FOUND)
         except Section.DoesNotExist:
             content = {
                 'status': 'Not Found'
@@ -122,7 +141,9 @@ class get_delete_update_section(APIView):
 
 class get_delete_update_course(APIView):
     serializer_class = CourseSerializer
-    # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
+
+    permission_classes = [IsMahasiswa | IsDosen | IsAdminUser]
+
 
     def get_queryset(self, pk):
         try:
@@ -177,6 +198,67 @@ class get_delete_update_course(APIView):
         #     }
         #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
 
+class get_delete_update_video(APIView):
+    serializer_class = VideoSerializer
+
+    permission_classes = [IsMahasiswa | IsDosen | IsAdminUser]
+
+
+    def get_queryset(self, pk):
+        try:
+            video = Video.objects.get(id=pk)
+        except Video.DoesNotExist:
+            content = {
+                'status': 'Not Found'
+            }
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
+        return video
+
+    # Get a section
+    def get(self, request, pk):
+        video = self.get_queryset(pk)
+        serializer = VideoSerializer(video)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Update a section
+    def put(self, request, pk):
+
+        section = self.get_queryset(pk)
+
+        # if (request.user == section.creator):  # If creator is who makes request
+        if True:
+            serializer = VideoSerializer(Video, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                id = serializer.data['id']
+                video_obj = MetadataFetch.getVideoDuration(id)
+                serializer = VideoSerializer(video_obj)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # else:
+        #     content = {
+        #         'status': 'UNAUTHORIZED'
+        #     }
+        #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
+
+    # Delete a section
+    def delete(self, request, pk):
+
+        section = self.get_queryset(pk)
+
+        # if (request.user == section.creator):  # If creator is who makes request
+        if True:
+            section.delete()
+            content = {
+                'status': 'NO CONTENT'
+            }
+            return Response(content, status=status.HTTP_204_NO_CONTENT)
+        # else:
+        #     content = {
+        #         'status': 'UNAUTHORIZED'
+        #     }
+        #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
+
 class ListVideo(APIView):
     """
     View to list all video in the system.
@@ -184,12 +266,11 @@ class ListVideo(APIView):
     * Requires token authentication.
     * Only admin users are able to access this view.
     """
-    # authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsMahasiswa | IsDosen | IsAdminUser]
 
     def get(self, request, format=None):
         """
-        Return a list of all users.
+        Return a list of all videos.
         """
         section_id = self.request.query_params.get('sectionId')
         queryset = Video.objects.filter(course_object__id = section_id) \
@@ -198,7 +279,9 @@ class ListVideo(APIView):
         return Response({"videos": serializer_class.data})
 
     def post(self, request):
-        serializer = VideoSerializer(data=request.data)
+        data = request.data
+        data['created_by'] = request.user.id
+        serializer = VideoSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             id = serializer.data['id']

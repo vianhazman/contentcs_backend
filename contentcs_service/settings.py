@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'objects'
+    'objects',
+    'django_cas_ng',
+    'userauth'
 ]
 
 MIDDLEWARE = [
@@ -48,7 +50,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cas_ng.middleware.CASMiddleware'
     # ,
     # 'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
@@ -122,7 +125,38 @@ USE_L10N = True
 
 USE_TZ = True
 
+#CAS CAS CAS
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'userauth.cas_backend.CASBackend'
+)
+
+#JWT AUTHENTICATION
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+}
+
+CAS_SERVER_URL = 'https://sso.ui.ac.id/cas2/login'
+CAS_VERSION = 2
+CAS_STORE_NEXT = True
+CAS_CREATE_USER = True
+CAS_APPLY_ATTRIBUTES_TO_USER = True
+CAS_FORCE_CHANGE_USERNAME_CASE = 'lower'
+CAS_LOGOUT_COMPLETELY = True
+# CAS_REDIRECT_URL = "/api/course"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -135,3 +169,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+SSO_UI_URL="https://sso.ui.ac.id/cas2/"

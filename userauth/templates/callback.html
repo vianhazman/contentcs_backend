@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting.....</title>
+</head>
+<body>
+<a href="{{ nextPage }}">If this page isn't redirecting click here to continue</a>
+
+</body>
+<script>
+    var payload = {
+        "token": "{{ userPayload }}",
+        "user_name": "{{ profile.name }}",
+        "user_id": "{{ username }}",
+        "role": "{{ profile.role }}"
+    }
+    localStorage.setItem('auth', JSON.stringify(payload));
+    window.location.replace("{{ nextPage }}");
+</script>
+</html>

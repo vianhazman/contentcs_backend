@@ -1,5 +1,6 @@
 from django.urls import path, re_path
 from .views import *
+import userauth.views
 
 urlpatterns = [
     path('course/', ListCourse.as_view(), name="course-list"),
@@ -12,5 +13,9 @@ urlpatterns = [
     re_path('course/(?P<pk>[0-9]+)$',  # Url to get update or delete a course
             get_delete_update_course.as_view(),
             name='get_delete_update_course'
+            ),
+    re_path('video/(?P<pk>[0-9]+)$',  # Url to get update or delete a course
+            get_delete_update_video.as_view(),
+            name='get_delete_update_video'
             )
 ]

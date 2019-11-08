@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from userauth.models import UserProfile
 
 
 class Course(models.Model):
@@ -8,6 +10,16 @@ class Course(models.Model):
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
 
+    created_by = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    @property
+    def created_by_profile(self):
+        name = UserProfile.objects.filter(user=self.created_by)[0]
+        return name
+
+    def __str__(self):
+        return self.course_name
+
 
 class Section(models.Model):
     id = models.AutoField(primary_key=True)
@@ -16,6 +28,16 @@ class Section(models.Model):
     course_object = models.ForeignKey(Course, on_delete=models.CASCADE)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
+
+    created_by = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    @property
+    def created_by_profile(self):
+        name = UserProfile.objects.filter(user=self.created_by)[0]
+        return name
+
+    def __str__(self):
+        return self.section_name
 
 
 class Video(models.Model):
@@ -27,3 +49,14 @@ class Video(models.Model):
     section_object = models.ForeignKey(Section, on_delete=models.CASCADE)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
+
+    created_by = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    @property
+    def created_by_profile(self):
+        name = UserProfile.objects.filter(user=self.created_by)[0]
+        return name
+
+    def __str__(self):
+        return self.video_title
+

@@ -9,3 +9,5 @@ sqlparse==0.3.0
 imageio
 imageio-ffmpeg
 whitenoise
+django-cas-ng
+djangorestframework-jwt
