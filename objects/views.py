@@ -7,7 +7,7 @@ from rest_framework import status
 import os
 import imageio
 from django.conf import settings
-from objects.serializers import CourseSerializer, SectionSerializer, VideoSerializer
+from objects.serializers import CourseSerializer, CourseIndividualSerializer, SectionSerializer, VideoSerializer
 from objects.models import Course, Section, Video
 from objects.util.metadataFetch import MetadataFetch
 from userauth.permissions import IsDosen, IsMahasiswa
@@ -159,7 +159,7 @@ class get_delete_update_course(APIView):
     def get(self, request, pk):
 
         course = self.get_queryset(pk)
-        serializer = CourseSerializer(course)
+        serializer = CourseIndividualSerializer(course)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # Update a course
