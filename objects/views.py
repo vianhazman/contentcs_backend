@@ -30,7 +30,8 @@ class ListCourse(APIView):
         Return a list of all users.
         """
         queryset = Course.objects.all()
-        serializer_class = CourseSerializer(queryset, many=True)
+        # print(queryset[2].created_by.userprofile)
+        serializer_class = CourseSerializer(queryset, many=True,context={'isnotadmin':False})
         return Response({"courses": serializer_class.data})
 
     # def get(request, sso_profile):

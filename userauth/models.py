@@ -5,7 +5,7 @@ from .constants import UserRoles
 
 # Create your models here.
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,)
     name = models.CharField(max_length=128)
     role = models.IntegerField(choices=UserRoles.choices(), default=UserRoles.MAHASISWA)
 
