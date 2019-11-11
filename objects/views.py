@@ -89,7 +89,7 @@ class get_delete_update_section(APIView):
                     'status': 'Not Found'
                 }
                 return Response(content, status=status.HTTP_404_NOT_FOUND)
-        except Section.DoesNotExist:
+        except:
             content = {
                 'status': 'Not Found'
             }
@@ -100,44 +100,38 @@ class get_delete_update_section(APIView):
     def get(self, request, pk):
 
         section = self.get_queryset(pk)
-        serializer = SectionSerializer(section)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            serializer = SectionSerializer(section)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            content = {
+                'status': 'Not Found'
+            }
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
     # Update a section
     def put(self, request, pk):
 
         section = self.get_queryset(pk)
 
-        # if (request.user == section.creator):  # If creator is who makes request
         if True:
             serializer = SectionSerializer(section, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # else:
-        #     content = {
-        #         'status': 'UNAUTHORIZED'
-        #     }
-        #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
 
     # Delete a section
     def delete(self, request, pk):
 
         section = self.get_queryset(pk)
 
-        # if (request.user == section.creator):  # If creator is who makes request
         if True:
             section.delete()
             content = {
                 'status': 'NO CONTENT'
             }
             return Response(content, status=status.HTTP_204_NO_CONTENT)
-        # else:
-        #     content = {
-        #         'status': 'UNAUTHORIZED'
-        #     }
-        #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
 
 class get_delete_update_course(APIView):
     serializer_class = CourseSerializer
@@ -159,26 +153,27 @@ class get_delete_update_course(APIView):
     def get(self, request, pk):
 
         course = self.get_queryset(pk)
-        serializer = CourseIndividualSerializer(course)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            serializer = CourseIndividualSerializer(course)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            content = {
+                'status': 'Not Found'
+            }
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
+
 
     # Update a course
     def put(self, request, pk):
 
         course = self.get_queryset(pk)
 
-        # if (request.user == section.creator):  # If creator is who makes request
         if True:
             serializer = CourseSerializer(course, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # else:
-        #     content = {
-        #         'status': 'UNAUTHORIZED'
-        #     }
-        #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
 
     # Delete a course
     def delete(self, request, pk):
@@ -207,7 +202,7 @@ class get_delete_update_video(APIView):
     def get_queryset(self, pk):
         try:
             video = Video.objects.get(id=pk)
-        except Video.DoesNotExist:
+        except:
             content = {
                 'status': 'Not Found'
             }
@@ -217,15 +212,20 @@ class get_delete_update_video(APIView):
     # Get a section
     def get(self, request, pk):
         video = self.get_queryset(pk)
-        serializer = VideoSerializer(video)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            serializer = VideoSerializer(video)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            content = {
+                'status': 'Not Found'
+            }
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
     # Update a section
     def put(self, request, pk):
 
         section = self.get_queryset(pk)
 
-        # if (request.user == section.creator):  # If creator is who makes request
         if True:
             serializer = VideoSerializer(Video, data=request.data)
             if serializer.is_valid():
@@ -235,29 +235,18 @@ class get_delete_update_video(APIView):
                 serializer = VideoSerializer(video_obj)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # else:
-        #     content = {
-        #         'status': 'UNAUTHORIZED'
-        #     }
-        #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
 
     # Delete a section
     def delete(self, request, pk):
 
         section = self.get_queryset(pk)
 
-        # if (request.user == section.creator):  # If creator is who makes request
         if True:
             section.delete()
             content = {
                 'status': 'NO CONTENT'
             }
             return Response(content, status=status.HTTP_204_NO_CONTENT)
-        # else:
-        #     content = {
-        #         'status': 'UNAUTHORIZED'
-        #     }
-        #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
 
 class ListVideo(APIView):
     """

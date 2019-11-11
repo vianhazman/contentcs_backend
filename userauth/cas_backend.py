@@ -186,10 +186,16 @@ class CASBackend(ModelBackend):
         By default, returns the user unmodified.
         """
         if not UserProfile.objects.filter(user=user).exists():
-            name = attributes['nama']
-            role = UserRoles.MAHASISWA \
-                if attributes['peran_user'] == 'mahasiswa' \
-                else UserRoles.DOSEN
+            if 'nama' in attributes:
+                name = attributes['nama']
+            else:
+                name = attributes['ldap_cn']
+            if 'peran_user' in attributes:
+                role = UserRoles.MAHASISWA \
+                    if attributes['peran_user'] == 'mahasiswa' \
+                    else UserRoles.DOSEN
+            else:
+                role = UserRoles.MAHASISWA
 
             userProfile = UserProfile.objects.create(
                 user=user,
