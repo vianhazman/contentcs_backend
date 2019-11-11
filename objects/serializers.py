@@ -14,7 +14,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
 
 class SectionSerializer(serializers.ModelSerializer):
-    videos = VideoSerializer(many=True)
+    videos = VideoSerializer(many=True, read_only=True)
     created_by_profile = UserProfileSerializers(read_only=True)
 
     class Meta:
@@ -35,7 +35,7 @@ class CourseSerializer(serializers.ModelSerializer):
         return Course.objects.create(**validated_data)
 
 class CourseIndividualSerializer(serializers.ModelSerializer):
-    sections = SectionSerializer(many=True)
+    sections = SectionSerializer(many=True, read_only=True)
     created_by_profile = UserProfileSerializers(read_only=True)
 
     class Meta:

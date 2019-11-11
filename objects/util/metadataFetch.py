@@ -4,7 +4,7 @@ from objects.models import Video
 
 
 class MetadataFetch:
-    def getVideoDuration(self, video_id):
+    def getVideoDuration(id):
         video_obj = Video.objects.get(id=id)
         VIDEO_PATH = os.path.join(settings.MEDIA_ROOT,
                                   str(video_obj.video_file))

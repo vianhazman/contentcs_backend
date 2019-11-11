@@ -41,6 +41,7 @@ class ListCourse(APIView):
         data = request.data
         data['created_by'] = request.user.id
         serializer = CourseSerializer(data=data)
+        print("masuk")
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -180,18 +181,28 @@ class get_delete_update_course(APIView):
 
         course = self.get_queryset(pk)
 
-        # if (request.user == section.creator):  # If creator is who makes request
         if True:
             course.delete()
             content = {
                 'status': 'NO CONTENT'
             }
             return Response(content, status=status.HTTP_204_NO_CONTENT)
-        # else:
+
+class UpdateDuration(APIView):
+
+    # Get a section
+    def get(self, request, pk):
+        # try:
+        video_obj = MetadataFetch.getVideoDuration(pk)
+        content = {
+            'status': 'Updated'
+        }
+        return Response(content, status=status.HTTP_200_OK)
+        # except:
         #     content = {
-        #         'status': 'UNAUTHORIZED'
+        #         'status': 'Not Found'
         #     }
-        #     return Response(content, status=status.HTTP_401_UNAUTHORIZED)
+        #     return Response(content, status=status.HTTP_404_NOT_FOUND)
 
 class get_delete_update_video(APIView):
     serializer_class = VideoSerializer
@@ -270,6 +281,7 @@ class ListVideo(APIView):
     def post(self, request):
         data = request.data
         data['created_by'] = request.user.id
+        print(request.user.id)
         serializer = VideoSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
