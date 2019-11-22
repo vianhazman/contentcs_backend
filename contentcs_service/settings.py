@@ -156,6 +156,7 @@ CAS_CREATE_USER = True
 CAS_APPLY_ATTRIBUTES_TO_USER = True
 CAS_FORCE_CHANGE_USERNAME_CASE = 'lower'
 CAS_LOGOUT_COMPLETELY = True
+CAS_ROOT_PROXIED_AS = "http://content-ossd.cs.ui.ac.id"
 # CAS_REDIRECT_URL = "/api/course"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
