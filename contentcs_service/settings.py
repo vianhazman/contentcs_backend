@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'objects',
     'django_cas_ng',
-    'userauth'
+    'userauth',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,8 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_cas_ng.middleware.CASMiddleware'
-    # ,
+    'django_cas_ng.middleware.CASMiddleware'    # ,
     # 'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
@@ -159,7 +160,7 @@ CAS_CREATE_USER = True
 CAS_APPLY_ATTRIBUTES_TO_USER = True
 CAS_FORCE_CHANGE_USERNAME_CASE = 'lower'
 CAS_LOGOUT_COMPLETELY = True
-# CAS_ROOT_PROXIED_AS = "http://content-ossd.cs.ui.ac.id"
+CAS_ROOT_PROXIED_AS = "http://content-ossd.cs.ui.ac.id/auth/login"
 # CAS_REDIRECT_URL = "/api/course"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -174,3 +175,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 SSO_UI_URL="https://sso.ui.ac.id/cas2/"
+
+# CORS
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3080",
+    "http://127.0.0.1:3000"
+]

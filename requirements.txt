@@ -11,3 +11,4 @@ imageio-ffmpeg
 whitenoise
 django-cas-ng
 djangorestframework-jwt
+django-cors-headers
