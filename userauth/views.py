@@ -103,7 +103,7 @@ class LoginView(View):
     def post(self, request):
         next_page = clean_next_page(request, request.POST.get('next', settings.CAS_REDIRECT_URL))
         service_url = get_service_url(request, next_page)
-        client = get_cas_client(service_url=service_url, request=request)
+        client = get_cas_client(service_url="https://content-ossd.cs.ui.ac.id/auth/login/", request=request)
 
         if request.POST.get('logoutRequest'):
             clean_sessions(client, request)
