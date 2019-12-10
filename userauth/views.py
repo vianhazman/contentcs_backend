@@ -120,7 +120,7 @@ class LoginView(View):
         next_page = clean_next_page(request, request.GET.get('next'))
         required = request.GET.get('required', False)
 
-        service_url = get_service_url(request, next_page)
+        service_url = "https://content-ossd.cs.ui.ac.id/auth/login"
         client = get_cas_client(service_url=service_url, request=request)
 
         if not next_page and settings.CAS_STORE_NEXT and 'CASNEXT' in request.session:
@@ -217,9 +217,7 @@ class LogoutView(View):
         if settings.CAS_LOGOUT_COMPLETELY:
             protocol = get_protocol(request)
             host = request.get_host()
-            redirect_url = urllib_parse.urlunparse(
-                (protocol, host, next_page, '', '', ''),
-            )
+            redirect_url = "https://content-ossd.cs.ui.ac.id"
             client = get_cas_client(request=request)
             return HttpResponseRedirect(client.get_logout_url(redirect_url))
         else:
