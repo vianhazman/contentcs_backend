@@ -21,4 +21,4 @@ def getAdminUser(id):
 
 SERVICE_URL = "https://content-ossd.cs.ui.ac.id/"
 # SERVICE_URL = "0.0.0.0:8000/"
-LOGIN_PATH = "auth/login/"
+LOGIN_PATH = "auth/login"
