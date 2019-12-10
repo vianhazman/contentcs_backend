@@ -167,7 +167,7 @@ CAS_ROOT_PROXIED_AS = "http://content-ossd.cs.ui.ac.id/auth/login"
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 # Heroku
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 STATIC_ROOT= os.path.join(BASE_DIR,'static/')
 MEDIA_URL = '/src/media/'
