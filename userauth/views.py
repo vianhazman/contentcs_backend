@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
+from asyncio import constants
 from datetime import timedelta
 from importlib import import_module
 
@@ -36,6 +37,8 @@ try:
     from urllib import parse as urllib_parse
 except ImportError:
     from django.utils.six.moves import urllib_parse
+
+from .constants import SERVICE_URL, LOGIN_PATH
 
 SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
@@ -103,7 +106,7 @@ class LoginView(View):
     def post(self, request):
         next_page = clean_next_page(request, request.POST.get('next', settings.CAS_REDIRECT_URL))
         service_url = get_service_url(request, next_page)
-        client = get_cas_client(service_url="https://content-ossd.cs.ui.ac.id/auth/login/", request=request)
+        client = get_cas_client(service_url=SERVICE_URL+LOGIN_PATH, request=request)
 
         if request.POST.get('logoutRequest'):
             clean_sessions(client, request)
@@ -120,7 +123,7 @@ class LoginView(View):
         next_page = clean_next_page(request, request.GET.get('next'))
         required = request.GET.get('required', False)
 
-        service_url = "https://content-ossd.cs.ui.ac.id/auth/login"
+        service_url = SERVICE_URL+LOGIN_PATH
         client = get_cas_client(service_url=service_url, request=request)
 
         if not next_page and settings.CAS_STORE_NEXT and 'CASNEXT' in request.session:
@@ -217,7 +220,7 @@ class LogoutView(View):
         if settings.CAS_LOGOUT_COMPLETELY:
             protocol = get_protocol(request)
             host = request.get_host()
-            redirect_url = "https://content-ossd.cs.ui.ac.id"
+            redirect_url = SERVICE_URL
             client = get_cas_client(request=request)
             return HttpResponseRedirect(client.get_logout_url(redirect_url))
         else:

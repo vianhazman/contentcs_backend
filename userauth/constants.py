@@ -14,6 +14,11 @@ def getAdminUser(id):
     response = {
         "name": "ADMIN",
         "user": id,
-        "role": UserRoles.ADMIN
+        "role": UserRoles.ADMIN,
+        "role_name":UserRoles.ADMIN.name
     }
     return response
+
+SERVICE_URL = "https://content-ossd.cs.ui.ac.id/"
+# SERVICE_URL = "0.0.0.0:8000/"
+LOGIN_PATH = "auth/login/"

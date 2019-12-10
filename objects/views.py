@@ -1,18 +1,13 @@
-from django.http import HttpResponse
-from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import authentication, permissions
 from rest_framework import status
-import os
-import imageio
-from django.conf import settings
-from objects.serializers import CourseSerializer, CourseIndividualSerializer, SectionSerializer, VideoSerializer
+from objects.serializers.course import CourseSerializer, CourseIndividualSerializer
+from objects.serializers.section import SectionSerializer
+from objects.serializers.video import VideoSerializer
 from objects.models import Course, Section, Video
 from objects.util.metadataFetch import MetadataFetch
 from userauth.permissions import IsDosen, IsMahasiswa
 from rest_framework.permissions import IsAdminUser
-from django.core.exceptions import PermissionDenied
 
 
 
