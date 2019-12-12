@@ -18,7 +18,7 @@ class CourseSerializer(serializers.ModelSerializer):
             return UserProfileSerializers(user[0]).data
         return getAdminUser(obj.created_by.id)
 
-    def get_video_count(self,obj):
+    def get_video_count(self, obj):
         section = obj.sections.all()
         count = sum([i.videos.count() for i in section])
         return count

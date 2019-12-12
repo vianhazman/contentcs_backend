@@ -20,7 +20,7 @@ class VideoSectionSerializer(serializers.ModelSerializer):
 class VideoSerializer(serializers.ModelSerializer):
 
     created_by_profile = serializers.SerializerMethodField('handle_admin', read_only=True)
-    section_object = VideoSectionSerializer()
+    section_detail = serializers.SerializerMethodField('get_section_course_object', read_only=True)
 
     def handle_admin(self, obj):
         user = UserProfile.objects.filter(user=obj.created_by)
@@ -28,6 +28,8 @@ class VideoSerializer(serializers.ModelSerializer):
             return UserProfileSerializers(user[0]).data
         return getAdminUser(obj.created_by.id)
 
+    def get_section_course_object(self, obj):
+        return VideoSectionSerializer(obj.section_object).data
 
 
     class Meta:

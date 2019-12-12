@@ -185,5 +185,3 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:3080",
     "http://127.0.0.1:3000"
 ]
-
-FORCE_SCRIPT_NAME='/api'
