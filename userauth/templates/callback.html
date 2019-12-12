@@ -6,7 +6,7 @@
 </head>
 <body>
 <a href="{{ nextPage }}">If this page isn't redirecting click here to continue</a>
-<a>[DEV] Auth Token {{ userPayload }}</a>
+{#<a>[DEV] Auth Token {{ userPayload }}</a>#}
 
 
 </body>
@@ -18,6 +18,6 @@
         "role": "{{ profile.role }}"
     }
     localStorage.setItem('auth', JSON.stringify(payload));
-    {#window.location.replace("{{ nextPage }}");#}
+    window.location.replace("{{ nextPage }}");
 </script>
 </html>
